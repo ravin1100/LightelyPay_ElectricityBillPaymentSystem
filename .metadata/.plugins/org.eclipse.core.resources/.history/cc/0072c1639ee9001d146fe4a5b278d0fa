@@ -1,0 +1,9 @@
+package com.masai.entities;
+
+public class User {
+	String firstName;
+	String lastName;
+	String address;
+	int mobileNumber;
+	String email;
+}
