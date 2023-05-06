@@ -1,0 +1,22 @@
+package com.masai.entities;
+
+public class Consumer extends User {
+	private int units;
+	private int rate;
+	private int totalBillAmount;
+	private String dueDate;
+	private String status;
+	
+	public Consumer(int units, int rate, int totalBillAmount, String dueDate, String status) {
+		super();
+		this.units = units;
+		this.rate = rate;
+		this.totalBillAmount = totalBillAmount;
+		this.dueDate = dueDate;
+		this.status = status;
+	}
+	
+	
+	
+	
+}

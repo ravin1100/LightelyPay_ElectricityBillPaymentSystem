@@ -1,0 +1,11 @@
+package com.masai.utilities;
+
+import java.util.Map;
+
+import com.masai.entities.Bill;
+
+public class FileExists {
+	public static Map<Integer, Bill> billFile() {
+		Map<Integer, Bill> bFile = null;
+	}
+}
