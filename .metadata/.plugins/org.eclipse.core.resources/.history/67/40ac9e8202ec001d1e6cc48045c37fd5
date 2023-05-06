@@ -12,7 +12,6 @@ import java.util.Map;
 
 import com.masai.entities.Bill;
 import com.masai.entities.Consumer;
-import com.masai.entities.Transaction;
 
 public class FileExists {
 	public static Map<Integer, Bill> billFile() {
@@ -52,16 +51,17 @@ public class FileExists {
 				f.createNewFile();
 				flag = true;
 			}
-			if (flag) {
-				cFile = new LinkedHashMap<>();
-				FileOutputStream fos = new FileOutputStream(f);
+			if(flag) {
+				cFile=new LinkedHashMap<>();
+				FileOutputStream fos= new FileOutputStream(f);
 				ObjectOutputStream oos = new ObjectOutputStream(fos);
 				oos.writeObject(cFile);
 				return cFile;
-			} else {
-				FileInputStream fis = new FileInputStream(f);
+			}
+			else {
+				FileInputStream fis= new FileInputStream(f);
 				ObjectInputStream ois = new ObjectInputStream(fis);
-				cFile = (Map<String, Consumer>) ois.readObject();
+				cFile=(Map<String, Consumer>)ois.readObject();
 				return cFile;
 			}
 		} catch (Exception e) {
@@ -71,30 +71,26 @@ public class FileExists {
 		return cFile;
 
 	}
-
-	public static List<Transaction> transactionFile() {
+	public static List<Transaction> transactionFile(){
 		List<Transaction> tFile = null;
 		File f = new File("transaction.ser");
-		boolean flag = false;
-		try {
-			if (!f.exists()) {
-				f.createNewFile();
-				flag = true;
-			}
-			if (flag) {
-				tFile = new ArrayList<>();
-				ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(f));
-				oos.writeObject(tFile);
-				return tFile;
-			} else {
-				ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f));
-				tFile = (List<Transaction>) ois.readObject();
-				return tFile;
-			}
-		} catch (Exception e) {
-			// TODO: handle exception
-			System.out.println(e.getMessage());
+		boolean flag=false;
+		if(!f.exists()) {
+			f.createNewFile();
+			flag=true;
+		}
+		if(flag) {
+			tFile=new ArrayList<>();
+			ObjectOutputStream oos=new ObjectOutputStream(new FileOutputStream(f));
+			oos.writeObject(tFile);
+			return tFile;	
+		}
+		else {
+			ObjectInputStream ois=new ObjectInputStream(new FileInputStream(f));
+			tFile=(List<Transaction>)ois.readObject();
+			return tFile;
 		}
 		return tFile;
 	}
+
 }
