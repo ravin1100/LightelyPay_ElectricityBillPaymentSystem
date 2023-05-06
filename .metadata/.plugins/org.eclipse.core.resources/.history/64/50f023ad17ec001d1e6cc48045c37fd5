@@ -1,0 +1,18 @@
+package com.masai;
+
+import java.util.List;
+import java.util.Map;
+
+import com.masai.entities.Bill;
+import com.masai.entities.Consumer;
+import com.masai.entities.Transaction;
+import com.masai.utilities.FileExists;
+
+public class Main {
+	public static void main(String[] args) {
+//		checking file
+		Map<Integer, Bill> bills = FileExists.billFile();
+		Map<String, Consumer> consumers = FileExists.consumerFile();
+		List<Transaction> transactions=FileExists.transactionFile();
+	}
+}

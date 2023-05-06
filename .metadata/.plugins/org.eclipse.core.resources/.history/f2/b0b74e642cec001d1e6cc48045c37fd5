@@ -29,6 +29,7 @@ public class Main {
 				case 1: 
 					adminFunctionality(sc,bills,consumers,transactions);
 				break;
+				}
 				case 2:
 					consumerFunctionality(sc,consumers,bills,transactions);
 					break;
@@ -41,24 +42,22 @@ public class Main {
 				default:
 						throw new IllegalArgumentException("Invalid Selection");
 				}
-			}while(preference!=0);	
-		}
-	catch(Exception e){
-		// TODO: handle exception
-		System.out.println(e.getMessage());
-	}
-		finally{
-//			this block of code will always be executed
-		try {
-			ObjectOutputStream boos = new ObjectOutputStream(new FileOutputStream("Bill.ser"));
-			boos.writeObject(bills);
-			ObjectOutputStream coos = new ObjectOutputStream(new FileOutputStream("Consumer.ser"));
-			coos.writeObject("consumers");
-			ObjectOutputStream toos = new ObjectOutputStream(new FileOutputStream("Transaction.ser"));
-			toos.writeObject("transactions");
+					
+			}while(preference!=0);
+			
 		} catch (Exception e) {
 			// TODO: handle exception
 			System.out.println(e.getMessage());
 		}
+		finally {
+//			this block of code will always be executed
+			try {
+				ObjectOutputStream boos = new ObjectOutputStream(new FileOutputStream("Bill.ser"));
+				ObjectOutputStream coos= new ObjectOutputStream(new FileOutputStream("Consumer.ser"));
+				ObjectOutputStream toos=new ObjectOutputStream(new FileOutputStream("Transaction.ser"));
+			} catch (Exception e) {
+				// TODO: handle exception
+				System.out.println(e.getMessage());
+			}
 	}
 }
