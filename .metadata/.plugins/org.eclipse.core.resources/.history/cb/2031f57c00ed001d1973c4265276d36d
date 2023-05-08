@@ -1,0 +1,14 @@
+package com.masai.entities;
+
+import java.io.Serializable;
+
+public class Consumer extends User implements Serializable {
+	
+	
+
+	
+	
+	
+	
+	
+}

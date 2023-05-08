@@ -17,7 +17,7 @@ import com.masai.entities.Transaction;
 public class FileExists {
 	public static Map<Integer, Bill> billFile() {
 		Map<Integer, Bill> bFile = null;
-		File f = new File("bill.ser");
+		File f = new File("Bill.ser");
 		boolean flag = false;
 		try {
 			if (!f.exists()) {
@@ -45,7 +45,7 @@ public class FileExists {
 
 	public static Map<String, Consumer> consumerFile() {
 		Map<String, Consumer> cFile = null;
-		File f = new File("consumer.ser");
+		File f = new File("Consumer.ser");
 		boolean flag = false;
 		try {
 			if (!f.exists()) {
@@ -74,7 +74,7 @@ public class FileExists {
 
 	public static List<Transaction> transactionFile() {
 		List<Transaction> tFile = null;
-		File f = new File("transaction.ser");
+		File f = new File("Transaction.ser");
 		boolean flag = false;
 		try {
 			if (!f.exists()) {

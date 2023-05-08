@@ -9,9 +9,40 @@ import java.util.Scanner;
 import com.masai.entities.Bill;
 import com.masai.entities.Consumer;
 import com.masai.entities.Transaction;
+import com.masai.exceptions.InvalidDetailsException;
+import com.masai.services.BillService;
+import com.masai.services.BillServiceImpl;
+import com.masai.services.ConsumerService;
+import com.masai.services.ConsumerServiceImpl;
+import com.masai.services.TransactionService;
+import com.masai.services.TransactionServiceImpl;
+import com.masai.utilities.Admin;
 import com.masai.utilities.FileExists;
 
 public class Main {
+
+	public static void adminFunctionality(Scanner sc, Map<Integer, Bill> bills, Map<String, Consumer> consumers,
+			List<Transaction> transactions) throws InvalidDetailsException {
+		adminLogin(sc);
+		BillService billService = new BillServiceImpl();
+		ConsumerService conService = new ConsumerServiceImpl();
+		TransactionService trnsactionService = new TransactionServiceImpl();
+		int choice = 0;
+
+	}
+
+	public static void adminLogin(Scanner sc) throws InvalidDetailsException {
+		System.out.println("Enter Admin Username:");
+		String username = sc.next();
+		System.out.println("Enter Admin Password:");
+		String password = sc.next();
+		if (username.equals(Admin.username) && password.equals(Admin.password)) {
+			System.out.println("Admin Logged in Successfully");
+		} else {
+			throw new InvalidDetailsException("Invalid Admin Credentials");
+		}
+	}
+
 	public static void main(String[] args) {
 //		checking file
 		Map<Integer, Bill> bills = FileExists.billFile();
@@ -20,45 +51,44 @@ public class Main {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Welcome, in Electricity Bill Payment System");
 		try {
-			int preference=0;
+			int preference = 0;
 			do {
-				System.out.println("Please enter your preference: /n'1'-->Admin Login,/n'2'-->Consumer Login"
-						+ " /n'3'-->Customer Signup /n'0'-->Exit");
-				preference=sc.nextInt();
-				switch(preference) {
-				case 1: 
-					adminFunctionality(sc,bills,consumers,transactions);
-				break;
-				case 2:
-					consumerFunctionality(sc,consumers,bills,transactions);
+				System.out.println("Please enter your preference:\n'1'-->Admin Login,\n'2'-->Consumer Login"
+						+ " \n'3'-->Consumer Signup \n'0'-->Exit");
+				preference = sc.nextInt();
+				switch (preference) {
+				case 1:
+					adminFunctionality(sc, bills, consumers, transactions);
 					break;
-				case 3:
-					consumerSignUp(sc,consumers);
-					break;
+//				case 2:
+//					consumerFunctionality(sc, consumers, bills, transactions);
+//					break;
+//				case 3:
+//					consumerSignUp(sc, consumers);
+//					break;
 				case 0:
-				System.out.println("You are successfully exited from the system");
+					System.out.println("You are successfully exited from the system");
 					break;
 				default:
-						throw new IllegalArgumentException("Invalid Selection");
+					throw new IllegalArgumentException("Invalid Selection");
 				}
-			}while(preference!=0);	
-		}
-	catch(Exception e){
-		// TODO: handle exception
-		System.out.println(e.getMessage());
-	}
-		finally{
-//			this block of code will always be executed
-		try {
-			ObjectOutputStream boos = new ObjectOutputStream(new FileOutputStream("Bill.ser"));
-			boos.writeObject(bills);
-			ObjectOutputStream coos = new ObjectOutputStream(new FileOutputStream("Consumer.ser"));
-			coos.writeObject("consumers");
-			ObjectOutputStream toos = new ObjectOutputStream(new FileOutputStream("Transaction.ser"));
-			toos.writeObject("transactions");
+			} while (preference != 0);
 		} catch (Exception e) {
 			// TODO: handle exception
 			System.out.println(e.getMessage());
+		} finally {
+			// this block of code will always be executed
+			try {
+				ObjectOutputStream boos = new ObjectOutputStream(new FileOutputStream("Bill.ser"));
+				boos.writeObject(bills);
+				ObjectOutputStream coos = new ObjectOutputStream(new FileOutputStream("Consumer.ser"));
+				coos.writeObject("consumers");
+				ObjectOutputStream toos = new ObjectOutputStream(new FileOutputStream("Transaction.ser"));
+				toos.writeObject("transactions");
+			} catch (Exception e) {
+				// TODO: handle exception
+				System.out.println(e.getMessage());
+			}
 		}
 	}
 }
