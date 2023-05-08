@@ -1,10 +1,12 @@
 package com.masai.entities;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
 	private String firstName;
 	private String lastName;
 	private String address;
-	private int mobileNumber;
+	private long mobileNumber;
 	private String email;
 	
 	public User() {
@@ -36,10 +38,10 @@ public class User {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	public int getMobileNumber() {
+	public long getMobileNumber() {
 		return mobileNumber;
 	}
-	public void setMobileNumber(int mobileNumber) {
+	public void setMobileNumber(long mobileNumber) {
 		this.mobileNumber = mobileNumber;
 	}
 	public String getEmail() {

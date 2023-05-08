@@ -1,0 +1,28 @@
+package com.masai.entities;
+
+import java.io.Serializable;
+
+public class Consumer extends User implements Serializable {
+	
+	private double walletBalance;
+
+	public Consumer() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public Consumer(String firstName, String lastName, String address, int mobileNumber, String email, double walletBalance){
+		super(firstName, lastName, address, mobileNumber, email);
+		// TODO Auto-generated constructor stub
+		this.walletBalance=walletBalance;
+	}
+
+	
+	
+
+	
+	
+	
+	
+	
+}

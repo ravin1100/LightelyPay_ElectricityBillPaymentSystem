@@ -1,0 +1,9 @@
+package com.masai.utilities;
+
+public class usernameGeneration {
+	public static String usernameGenerate(name) {
+		int temp= (int)(Math.random()*10000);
+		return name+""+temp;
+	}
+	public static int pswdGenerate
+}
