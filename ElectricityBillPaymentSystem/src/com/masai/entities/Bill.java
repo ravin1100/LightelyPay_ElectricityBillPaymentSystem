@@ -1,23 +1,54 @@
 package com.masai.entities;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 public class Bill extends User implements Serializable {
 	
+	private String userName;
+//	private String name;
 	private int units;
 	private int rate;
+	private int fixedCharge;
 	private int totalBillAmount;
-	private String dueDate;
+	private LocalDate dueDate;
 	private String status;
 	
-	public Bill(int units, int rate, int totalBillAmount, String dueDate, String status) {
+	public Bill(String userName, int units, int rate, int fixedCharge, int totalBillAmount, LocalDate dueDate, String status) {
 		super();
+		
+		this.userName=userName;
 		this.units = units;
 		this.rate = rate;
+		this.fixedCharge=fixedCharge;
 		this.totalBillAmount = totalBillAmount;
 		this.dueDate = dueDate;
 		this.status = status;
 	}
+
+	
+	
+	public String getUserName() {
+		return userName;
+	}
+
+
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+
+
+//	public String getName() {
+//		return name;
+//	}
+//
+//
+//	public void setName(String name) {
+//		this.name = name;
+//	}
+
 
 	public int getUnits() {
 		return units;
@@ -35,6 +66,14 @@ public class Bill extends User implements Serializable {
 		this.rate = rate;
 	}
 
+	public int getFixedCharge() {
+		return fixedCharge;
+	}
+
+	public void setFixedCharge(int fixedCharge) {
+		this.fixedCharge = fixedCharge;
+	}
+
 	public int getTotalBillAmount() {
 		return totalBillAmount;
 	}
@@ -43,11 +82,11 @@ public class Bill extends User implements Serializable {
 		this.totalBillAmount = totalBillAmount;
 	}
 
-	public String getDueDate() {
+	public LocalDate getDueDate() {
 		return dueDate;
 	}
 
-	public void setDueDate(String dueDate) {
+	public void setDueDate(LocalDate dueDate) {
 		this.dueDate = dueDate;
 	}
 
@@ -59,11 +98,19 @@ public class Bill extends User implements Serializable {
 		this.status = status;
 	}
 
+
+
 	@Override
 	public String toString() {
-		return "Bill [units=" + units + ", rate=" + rate + ", totalBillAmount=" + totalBillAmount + ", dueDate="
-				+ dueDate + ", status=" + status + "]";
+		return "Bill [userName=" + userName + ", units=" + units + ", rate=" + rate
+				+ ", fixedCharge=" + fixedCharge + ", totalBillAmount=" + totalBillAmount + ", dueDate=" + dueDate
+				+ ", status=" + status + "]";
 	}
+
+
+	
+	
+	
 
 	
 

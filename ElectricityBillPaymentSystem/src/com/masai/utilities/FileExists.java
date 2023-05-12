@@ -15,10 +15,10 @@ import com.masai.entities.Consumer;
 import com.masai.entities.Transaction;
 
 public class FileExists {
-	public static Map<Integer, Bill> billFile() {
-		Map<Integer, Bill> bFile = null;
+	public static Map<String, Bill> billFile() {
+		Map<String, Bill> bFile = null;
 		File f = new File("Bill.ser");
-		boolean flag = false;
+		boolean flag = f.exists();
 		try {
 			if (!f.exists()) {
 				f.createNewFile();
@@ -33,7 +33,7 @@ public class FileExists {
 			} else {
 				FileInputStream fis = new FileInputStream(f);
 				ObjectInputStream ois = new ObjectInputStream(fis);
-				bFile = (Map<Integer, Bill>) ois.readObject();
+				bFile = (Map<String, Bill>) ois.readObject();
 				return bFile;
 			}
 		} catch (Exception e) {
@@ -46,7 +46,7 @@ public class FileExists {
 	public static Map<String, Consumer> consumerFile() {
 		Map<String, Consumer> cFile = null;
 		File f = new File("Consumer.ser");
-		boolean flag = false;
+		boolean flag = f.exists();
 		try {
 			if (!f.exists()) {
 				f.createNewFile();
@@ -58,13 +58,14 @@ public class FileExists {
 				ObjectOutputStream oos = new ObjectOutputStream(fos);
 				oos.writeObject(cFile);
 				return cFile;
+				
 			} else {
 				FileInputStream fis = new FileInputStream(f);
 				ObjectInputStream ois = new ObjectInputStream(fis);
 				cFile = (Map<String, Consumer>) ois.readObject();
 				return cFile;
-			}
-		} catch (Exception e) {
+				
+		}} catch (Exception e) {
 			// TODO: handle exception
 			System.out.println(e.getMessage());
 		}
@@ -75,7 +76,7 @@ public class FileExists {
 	public static List<Transaction> transactionFile() {
 		List<Transaction> tFile = null;
 		File f = new File("Transaction.ser");
-		boolean flag = false;
+		boolean flag = f.exists();
 		try {
 			if (!f.exists()) {
 				f.createNewFile();

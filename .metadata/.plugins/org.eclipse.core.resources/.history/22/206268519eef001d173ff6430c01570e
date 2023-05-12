@@ -1,0 +1,69 @@
+package com.masai.services;
+
+import java.util.Map;
+
+import com.masai.entities.Bill;
+import com.masai.exceptions.BillException;
+
+public class BillServiceImpl implements BillService {
+
+	@Override
+	public String addBill(Bill bill, Map<String, Bill> bills) {
+		// TODO Auto-generated method stub
+		// here username is unique
+		bills.put(bill.getUserName(), bill);
+		return "Product added successfully";
+	}
+
+	@Override
+	public void viewAllBills(Map<String, Bill> bills) throws BillException {
+		// TODO Auto-generated method stub
+		if (bills != null && bills.size() > 0) {
+			for (Map.Entry<String, Bill> me : bills.entrySet()) {
+				System.out.println(me.getValue());
+			}
+
+		} else {
+			throw new BillException("Bill List is empty");
+		}
+
+	}
+
+	@Override
+	public void deleteBill(String userName, Map<String, Bill> bills) throws BillException {
+		// TODO Auto-generated method stub
+		if (bills != null && bills.size() > 0) {
+
+			if (bills.containsKey(userName)) {
+				bills.remove(userName);
+				System.out.println("Bill deleted successfully");
+
+			} else {
+				throw new BillException("Bill not found");
+			}
+
+		} else {
+			throw new BillException("Bill list is empty");
+		}
+
+	}
+
+	@Override
+	public String updateBill(String userName, Bill update, Map<String, Bill> bills) throws BillException {
+		// TODO Auto-generated method stub
+		if (bills != null && bills.size() > 0) {
+
+			if (bills.containsKey(userName)) {
+				bills.put(userName, update);
+				return "Bill has successfully updated";
+			} else {
+				throw new BilltException("Bill not found");
+			}
+
+		} else {
+			throw new BillException("Bill list is empty");
+		}
+		
+	}
+
+}

@@ -1,0 +1,398 @@
+package com.masai;
+
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+
+import com.masai.entities.Bill;
+import com.masai.entities.Consumer;
+import com.masai.entities.Transaction;
+import com.masai.exceptions.BillException;
+import com.masai.exceptions.DuplicateDataException;
+import com.masai.exceptions.InvalidDetailsException;
+import com.masai.exceptions.TransactionException;
+import com.masai.services.BillService;
+import com.masai.services.BillServiceImpl;
+import com.masai.services.ConsumerService;
+import com.masai.services.ConsumerServiceImpl;
+import com.masai.services.TransactionService;
+import com.masai.services.TransactionServiceImpl;
+import com.masai.utilities.Admin;
+import com.masai.utilities.FileExists;
+import com.masai.utilities.uNamePswdGeneration;
+
+public class Main {
+
+	// admin functionality
+
+	public static void adminFunctionality(Scanner sc, Map<String, Bill> bills, Map<String, Consumer> consumers,
+			List<Transaction> transactions) throws InvalidDetailsException {
+		adminLogin(sc);
+		BillService billService = new BillServiceImpl();
+		ConsumerService consumerService = new ConsumerServiceImpl();
+		TransactionService transactionService = new TransactionServiceImpl();
+		int choice = 0;
+		try {
+			do {
+				System.out.println("Press 1 add the Bill of the Conusmer");
+				System.out.println("Press 2 view all the bills");
+				System.out.println("Press 3 delete the bill");
+				System.out.println("Press 4 update the bill");
+				System.out.println("Press 5 view all consumers");
+				System.out.println("Press 6 to view all transactions");
+				System.out.println("Press 7 to log out");
+				choice = sc.nextInt();
+
+				switch (choice) {
+				case 1:
+					String added = adminAddBill(sc, bills, billService);
+					System.out.println(added);
+					break;
+				case 2:
+
+					adminViewAllBills(bills, billService);
+					break;
+				case 3:
+
+					adminDeleteBill(sc, bills, billService);
+					break;
+				case 4:
+
+					String upt = adminUpdateBill(sc, bills, billService);
+					System.out.println(upt);
+					break;
+				case 5:
+					adminViewAllConsumers(consumers, consumerService);
+
+					break;
+				case 6:
+					adminViewAllTransactions(transactions, transactionService);
+					break;
+				case 7:
+					System.out.println("admin has successfully logout");
+					break;
+				default:
+					throw new IllegalArgumentException("Unexpected value: " + choice);
+				}
+
+			} while (choice <= 6);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+
+	}
+
+	public static void adminLogin(Scanner sc) throws InvalidDetailsException {
+		System.out.println("Enter Admin Username:");
+		String username = sc.next();
+		System.out.println("Enter Admin Password:");
+		String password = sc.next();
+		if (username.equals(Admin.username) && password.equals(Admin.password)) {
+			System.out.println("Admin Logged in Successfully");
+		} else {
+			throw new InvalidDetailsException("Invalid Admin Credentials");
+		}
+	}
+
+	public static String adminAddBill(Scanner sc, Map<String, Bill> bills, BillService billService) {
+
+		String str = null;
+		System.out.println("please enter the Bill details");
+		System.out.println("Enter the consumer name");
+		String name = sc.next();
+		System.out.println("Enter the units");
+		int units = sc.nextInt();
+		System.out.println("Enter the rate");
+		int rate = sc.nextInt();
+		System.out.println("Enter the fixed charge");
+		int fixedCharge = sc.nextInt();
+		System.out.println("Enter the bill status");
+		String status = sc.next();
+
+		LocalDate dueDate = LocalDate.now();
+
+		int totalBillAmount = (units * rate) + fixedCharge;
+		String userName = uNamePswdGeneration.usernameGenerate(name);
+
+		Bill bill = new Bill(userName, name, units, rate, fixedCharge, totalBillAmount, dueDate, status);
+
+		str = billService.addBill(bill, bills); // considering all details are valid
+
+		return str;
+
+	}
+
+	public static void adminViewAllBills(Map<String, Bill> bills, BillService billService) throws BillException {
+		billService.viewAllBills(bills);
+	}
+
+	public static void adminDeleteBill(Scanner sc, Map<String, Bill> bills, BillService billService)
+			throws BillException {
+
+		System.out.println("please enter the username of consumer bill to be deleted");
+		String userName = sc.next();
+		billService.deleteBill(userName, bills);
+	}
+
+	public static String adminUpdateBill(Scanner sc, Map<String, Bill> bills, BillService billService)
+			throws BillException {
+		String result = null;
+		System.out.println("please enter the user name of the bill which is to be updated");
+		String userName = sc.next();
+		System.out.println("Enter the updated details ");
+
+		System.out.println("Enter the  name");
+		String name = sc.next();
+
+		System.out.println("Enter the  units");
+		int units = sc.nextInt();
+
+		System.out.println("Enter the rate");
+		int rate = sc.nextInt();
+
+		System.out.println("Enter the  fixed charge");
+		int fixedCharge = sc.nextInt();
+
+		System.out.println("Enter the  status");
+		String status = sc.next();
+
+		LocalDate dueDate = LocalDate.now();
+		int totalBillAmount = (units * rate) + fixedCharge;
+
+		Bill update = new Bill(userName, name, units, rate, fixedCharge, totalBillAmount, dueDate, status);
+
+		result = billService.updateBill(userName, update, bills);
+		return result;
+	}
+
+	public static void adminViewAllConsumers(Map<String, Consumer> consumers, ConsumerService consumerService)
+			throws BillException {
+		List<Consumer> list = consumerService.viewAllConsumers(consumers);
+
+		for (Consumer c : list) {
+			System.out.println(c);
+		}
+	}
+
+	public static void adminViewAllTransactions(List<Transaction> transactions, TransactionService transactionService)
+			throws TransactionException {
+		List<Transaction> allTransactions = transactionService.viewAllTransactions(transactions);
+
+		for (Transaction tr : allTransactions) {
+			System.out.println(tr);
+		}
+
+	}
+
+	// consumer functionality
+
+	public static void consumerFunctionality(Scanner sc, Map<String, Consumer> consumers, Map<String, Bill> bills,
+			List<Transaction> transactions) throws InvalidDetailsException, TransactionException {
+
+		ConsumerService consumerService = new ConsumerServiceImpl();
+		BillService billService = new BillServiceImpl();
+		TransactionService transactionService = new TransactionServiceImpl();
+
+		// Consumer login
+
+		System.out.println("please enter the following details to login");
+		System.out.println("please enter the user name");
+		String userName = sc.next();
+		System.out.println("Enter the password");
+		String password = sc.next();
+		consumerLogin(userName, password, consumers, consumerService);
+
+		try {
+			int choice = 0;
+			do {
+				System.out.println("Select the option of your choice");
+				System.out.println("Press 1 to view bill");
+				System.out.println("Press 2 to pay bill");
+				System.out.println("Press 3 to add money to wallet");
+				System.out.println("Press 4 view wallet balance");
+				System.out.println("Press 5 view my details");
+				System.out.println("Press 6 view my transactions");
+				System.out.println("Press 7 to logout");
+				choice = sc.nextInt();
+
+				switch (choice) {
+				case 1:
+					consumerViewBill(sc, bills, billService);
+					break;
+				case 2:
+					String result = consumerPayBill(sc, bills, consumers, transactions, consumerService);
+					System.out.println(result);
+					break;
+				case 3:
+					String moneyAdded = consumerAddMoneyToWallet(sc, userName, consumers, consumerService);
+					System.out.println(moneyAdded);
+					break;
+				case 4:
+					int walletBalance = consumerViewWalletBalance(userName, consumers, consumerService);
+					System.out.println("Wallet balance is: " + walletBalance);
+					break;
+				case 5:
+					consumerViewMyDetails(userName, consumers, consumerService);
+					break;
+				case 6:
+					consumerViewConsumerTransactions(userName, transactions, transactionService);
+					break;
+				case 7:
+					System.out.println("you have successsfully logout");
+					break;
+				default:
+					System.out.println("invalid choice");
+					break;
+				}
+
+			} while (choice <= 6);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
+	public static void consumerSignup(Scanner sc, Map<String, Consumer> consumers) throws DuplicateDataException {
+		System.out.println("please enter the following details to Signup");
+		System.out.println("please enter the first name");
+		String firstName = sc.next();
+		System.out.println("please enter the last name");
+		String lastName = sc.next();
+		System.out.println("enter the address");
+		String address = sc.next();
+		System.out.println("enter the mobile number");
+		int mobileNumber = sc.nextInt();
+		System.out.println("Enter the email id");
+		String email = sc.next();
+		System.out.println("Enter the balance to be added into the wallet");
+		int balance = sc.nextInt();
+
+		String userName = uNamePswdGeneration.usernameGenerate(firstName);
+		String password = uNamePswdGeneration.pswdGenerate(firstName);
+		Consumer cons = new Consumer(firstName, lastName, address, mobileNumber, email, userName, password, balance);
+//		System.out.println(cons);
+		ConsumerService consumerService = new ConsumerServiceImpl();
+		consumerService.signUp(cons, consumers);
+		System.out.println("consumer has Succefully sign up");
+
+		System.out.println("Remember these details :");
+		System.out.println("Your username :" + userName + "  " + "Your password :" + password);
+
+	}
+
+	public static void consumerLogin(String useName, String password, Map<String, Consumer> consumers,
+			ConsumerService consumerService) throws InvalidDetailsException {
+		consumerService.login(useName, password, consumers);
+		System.out.println("Consumer has successfully login");
+
+	}
+
+	public static void consumerViewBill(Scanner sc, Map<String, Bill> bills, BillService billService)
+			throws BillException {
+		System.out.println("Enter the userName");
+		String userName = sc.next();
+		Bill conBill = billService.viewBill(userName, bills);
+		System.out.println(conBill);
+	}
+
+	public static String consumerPayBill(Scanner sc, Map<String, Bill> bills, Map<String, Consumer> consumers,
+			List<Transaction> transactions, ConsumerService consumerService)
+			throws InvalidDetailsException, BillException {
+		System.out.println("Enter the userName");
+		String userName = sc.next();
+		
+		System.out.println("Your bill amount is :" +bills.get(userName).getTotalBillAmount());
+		System.out.println("enter the bill amount");
+		int amount = sc.nextInt();
+		consumerService.payBill(userName, amount, bills, consumers, transactions);
+
+		return "You have successfully paid the bill";
+
+	}
+
+	public static String consumerAddMoneyToWallet(Scanner sc, String userName, Map<String, Consumer> consumers,
+			ConsumerService consumerService) {
+		System.out.println("please enter the amount");
+		int amount = sc.nextInt();
+		boolean added = consumerService.addMoneyToWallet(amount, userName, consumers);
+
+		return "Amount: " + amount + " successfully added to your wallet";
+	}
+
+	public static int consumerViewWalletBalance(String userName, Map<String, Consumer> consumers,
+			ConsumerService consumerService) {
+		int walletBalance = consumerService.viewWalletBalance(userName, consumers);
+		return walletBalance;
+	}
+
+	public static void consumerViewMyDetails(String userName, Map<String, Consumer> consumers,
+			ConsumerService consumerService) {
+		Consumer con = consumerService.viewConsumerDetails(userName, consumers);
+		System.out.println("name : " + userName);
+		System.out.println("Full Name : " + con.getFirstName() + " " + con.getLastName());
+		System.out.println("address : " + con.getAddress());
+		System.out.println("mobile number : " + con.getMobileNumber());
+		System.out.println("email : " + con.getEmail());
+		System.out.println("wallet balance : " + con.getWalletBalance());
+	}
+
+	public static void consumerViewConsumerTransactions(String userName, List<Transaction> transactions,
+			TransactionService transactionService) throws TransactionException {
+		List<Transaction> myTransactions = transactionService.viewConsumerTransactions(userName, transactions);
+
+		for (Transaction tr : myTransactions) {
+			System.out.println(tr);
+		}
+	}
+
+	public static void main(String[] args) {
+//		checking file
+		Map<String, Bill> bills = FileExists.billFile();
+		Map<String, Consumer> consumers = FileExists.consumerFile();
+		List<Transaction> transactions = FileExists.transactionFile();
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Welcome, in Electricity Bill Payment System");
+		try {
+			int preference = 0;
+			do {
+				System.out.println("Please enter your preference:\n'1'-->Admin Login,\n'2'-->Consumer Login"
+						+ " \n'3'-->Consumer Signup \n'0'-->Exit");
+				preference = sc.nextInt();
+				switch (preference) {
+				case 1:
+					adminFunctionality(sc, bills, consumers, transactions);
+					break;
+				case 2:
+					consumerFunctionality(sc, consumers, bills, transactions);
+					break;
+				case 3:
+					consumerSignup(sc, consumers);
+					break;
+				case 0:
+					System.out.println("You are successfully exited from the system");
+					break;
+				default:
+					throw new IllegalArgumentException("Invalid Selection");
+				}
+			} while (preference != 0);
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println(e.getMessage());
+		} finally {
+			// this block of code will always be executed
+			try {
+				ObjectOutputStream boos = new ObjectOutputStream(new FileOutputStream("Bill.ser"));
+				boos.writeObject(bills);
+				ObjectOutputStream coos = new ObjectOutputStream(new FileOutputStream("Consumer.ser"));
+				coos.writeObject("consumers");
+				ObjectOutputStream toos = new ObjectOutputStream(new FileOutputStream("Transaction.ser"));
+				toos.writeObject("transactions");
+			} catch (Exception e) {
+				// TODO: handle exception
+				System.out.println(e.getMessage());
+			}
+		}
+	}
+}

@@ -6,19 +6,18 @@ import java.time.LocalDate;
 public class Transaction implements Serializable {
 	private String username;
 	private String email;
-	private int billId;
-	private double amount;
+	private int amount;
 	private LocalDate dt;
-	
+
 	public Transaction() {
 		super();
 	}
 
-	public Transaction(String username, String email, int billId, double amount, LocalDate dt) {
+	public Transaction(String username, String email, int amount, LocalDate dt) {
 		super();
 		this.username = username;
 		this.email = email;
-		this.billId = billId;
+
 		this.amount = amount;
 		this.dt = dt;
 	}
@@ -39,19 +38,11 @@ public class Transaction implements Serializable {
 		this.email = email;
 	}
 
-	public int getBillId() {
-		return billId;
-	}
-
-	public void setBillId(int billId) {
-		this.billId = billId;
-	}
-
-	public double getAmount() {
+	public int getAmount() {
 		return amount;
 	}
 
-	public void setAmount(double amount) {
+	public void setAmount(int amount) {
 		this.amount = amount;
 	}
 
@@ -65,10 +56,7 @@ public class Transaction implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Transaction [username=" + username + ", email=" + email + ", billId=" + billId + ", amount=" + amount
-				+ ", dt=" + dt + "]";
+		return "Transaction [username=" + username + ", email=" + email + ", amount=" + amount + ", dt=" + dt + "]";
 	}
-	
-	
-	
+
 }

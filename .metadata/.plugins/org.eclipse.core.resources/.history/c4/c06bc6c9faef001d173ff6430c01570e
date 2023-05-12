@@ -1,0 +1,102 @@
+package com.masai.services;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
+import com.masai.entities.Bill;
+import com.masai.entities.Consumer;
+import com.masai.entities.Transaction;
+import com.masai.exceptions.BillException;
+import com.masai.exceptions.DuplicateDataException;
+import com.masai.exceptions.InvalidDetailsException;
+
+public class ConsumerServiceImpl implements ConsumerService {
+
+	@Override
+	public boolean login(String userName, String password, Map<String, Consumer> consumers)
+			throws InvalidDetailsException {
+		// TODO Auto-generated method stub
+		if (consumers.containsKey(userName)) {
+
+			if (consumers.get(userName).getPassword().equals(password)) {
+				return true;
+			} else {
+				throw new InvalidDetailsException("Invalid Credentials");
+			}
+
+		} else {
+			throw new InvalidDetailsException("you have not sign up yet, please signup");
+		}
+	}
+
+	@Override
+	public void signUp(Consumer co, Map<String, Consumer> consumers) throws DuplicateDataException {
+		// TODO Auto-generated method stub
+		if (consumers.containsKey(co.getUserName())) {
+			throw new DuplicateDataException("Customer already exists , please login");
+		} else {
+
+			consumers.put(co.getUserName(), co);
+
+		}
+
+	}
+
+	@Override
+	public void payBill(String userName, int amount, Map<String, Bill> bills, Map<String, Consumer> consumers,
+			List<Transaction> transactions) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public boolean addMoneyToWallet(int amount, String userName, Map<String, Consumer> consumers) {
+		// TODO Auto-generated method stub
+		Consumer co = consumers.get(userName);
+
+		co.setWalletBalance(co.getWalletBalance() + amount);
+
+		consumers.put(userName, co);
+
+		return true;
+
+	}
+
+	@Override
+	public int viewWalletBalance(String userName, Map<String, Consumer> consumers) {
+		// TODO Auto-generated method stub
+		Consumer con = consumers.get(userName);
+
+		return con.getWalletBalance();
+	}
+
+	@Override
+	public Consumer viewConsumerDetails(String userName, Map<String, Consumer> consumers) {
+		// TODO Auto-generated method stub
+		if (consumers.containsKey(userName)) {
+
+			return consumers.get(userName);
+
+		}
+
+		return null;
+
+	}
+
+	@Override
+	public List<Consumer> viewAllConsumers(Map<String, Consumer> consumers) throws BillException {
+		// TODO Auto-generated method stub
+		List<Consumer> list = null;
+
+		if (consumers != null && consumers.size() > 0) {
+			Collection<Consumer> coll = consumers.values();
+			list = new ArrayList<>(coll);
+		} else {
+			throw new BillException("Customer list is empty");
+		}
+
+		return list;
+	}
+
+}
