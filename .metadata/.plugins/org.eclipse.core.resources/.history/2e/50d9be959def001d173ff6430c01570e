@@ -1,0 +1,36 @@
+package com.masai.services;
+
+import java.util.Map;
+
+import com.masai.entities.Bill;
+import com.masai.exceptions.BillException;
+
+public class BillServiceImpl implements BillService {
+
+	@Override
+	public String addBill(Bill bill, Map<String, Bill> bills) {
+		// TODO Auto-generated method stub
+		// here username is unique
+		bills.put(bill.getUserName(), bill);
+		return "Product added successfully";
+	}
+
+	@Override
+	public void viewAllBills(Map<String, Bill> bills) throws BillException {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void deleteBill(String userName, Map<String, Bill> bills) throws BillException {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public String updateBill(String userName, Bill update, Map<String, Bill> bills) throws BillException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

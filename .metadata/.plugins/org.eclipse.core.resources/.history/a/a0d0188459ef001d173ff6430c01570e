@@ -1,0 +1,11 @@
+package com.masai.services;
+
+import java.util.Map;
+
+import com.masai.entities.Bill;
+
+public interface BillService {
+	
+	public String addBill(Bill bill, Map<String, Bill> bills);
+	public void viewAllBills(Map<String, Bill> bills);
+}
